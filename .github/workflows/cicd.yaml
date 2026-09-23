@@ -32,8 +32,14 @@ jobs:
     needs: ci
     runs-on: self-hosted
     steps:
-      -
-        name: argocd app sync
+      - name: argocd app sync
+        shell: bash
+        run: |
+          curl -k -sSL -o argocd https://argocd-server.argocd/downloads/argocd-linux-amd64
+          chmod +x argocd
+          sudo mv argocd /usr/local/bin/argocd
+
+      - name: argocd app sync
         shell: bash
         run: |
           argocd login ${{ secrets.ARGOCD_SERVER }} \
