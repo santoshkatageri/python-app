@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: santoshpkatageri/python-app
   pullPolicy: IfNotPresent
-  tag: ""
+  tag: "f50ecf"
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
