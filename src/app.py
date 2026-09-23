@@ -16,7 +16,8 @@ def details():
         "version": "0.0.1",
         "message": "This is a sample Python application that demonstrates how to build a simple REST API using Flask.",
         "time": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-        "Hostname": socket.gethostname()
+        "Hostname": socket.gethostname(),
+        "author": "Santosh Katageri"
     })
 
 
