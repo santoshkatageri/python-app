@@ -24,12 +24,18 @@ jobs:
           SHORT_SHA="${GITHUB_SHA::6}"
           echo "short_sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
           echo "SHORT_SHA=${SHORT_SHA}"
+      
+      - name: Verify image tag
+        shell: bash
+        run: |
+          echo "Image tag: ${{ steps.set_short_sha.outputs.short_sha }}"
 
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/python-app:${{ env.SHORT_SHA }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/python-app:${{ steps.set_short_sha.outputs.short_sha }}
+    
     outputs:
       short_commit_id : ${{ steps.set_short_sha.outputs.short_sha }}
   
