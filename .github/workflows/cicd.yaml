@@ -18,7 +18,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
       - name: Set short SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::6}" >> $GITHUB_ENV
+        id: set_short_sha
+        shell: bash
+        run: |
+          SHORT_SHA="${GITHUB_SHA::6}"
+          echo "short_sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+          echo "SHORT_SHA=${SHORT_SHA}"
 
       - name: Build and push
         uses: docker/build-push-action@v7
@@ -48,9 +53,19 @@ jobs:
         shell: bash
         run: |
           short_commit_id="${{ needs.ci.outputs.short_commit_id }}"
+          echo "CI image tag: ${short_commit_id}"
+          if [ -z "$short_commit_id" ]; then
+            echo "ERROR: short_commit_id is empty"
+            exit 1
+          fi
           yq -i ".image.tag = \"${short_commit_id}\"" charts/python-app/values.yaml
           echo "Updated image:"
           yq '.image.tag' charts/python-app/values.yaml
+      
+      - name: Show Git diff
+        shell: bash
+        run: |
+          git diff -- charts/python-app/values.yaml
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
